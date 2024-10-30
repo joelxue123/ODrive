@@ -2,6 +2,7 @@
     "C_Cpp.intelliSenseEngine": "Default",
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
     "files.associations": {
+        "makefile": "makefile",
         "memory": "cpp",
         "utility": "cpp",
         "deque": "cpp",
@@ -31,6 +32,8 @@
         "tuple": "cpp",
         "type_traits": "cpp",
         "typeinfo": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "optional": "cpp",
+        "random": "cpp"
     }
 }

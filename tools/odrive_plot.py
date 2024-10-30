@@ -20,23 +20,22 @@ print("starting calibration...")
 
 # To read a value, simply read the property
 print("Bus voltage is " + str(my_drive.vbus_voltage) + "V")
-
-my_drive.axis0.motor.capturing =1
 time.sleep(0.2)
 oscilloscope_data =[]
 
-for oscilloscope_item in range(0,4095):
+
+sample_points = 4096
+for oscilloscope_item in range(0,sample_points):
     #print("oscilloscope_item " + str(oscilloscope_item) + " = " + str(my_drive.get_oscilloscope_val(oscilloscope_item)))
     oscilloscope_data.append(my_drive.get_oscilloscope_val(oscilloscope_item))
 
-for item in   oscilloscope_data:
-    print( item)
 
-with open('output.csv', 'w', newline='', encoding='utf-8') as file:
+
+with open('output_actual_velocity.csv', 'w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
-    writer.writerow(oscilloscope_data)
+    writer.writerow(oscilloscope_data )
 
-x = list(range(0,4095))
+x = list(range(0,sample_points))
 plt.plot(x,oscilloscope_data)
 
 plt.show()

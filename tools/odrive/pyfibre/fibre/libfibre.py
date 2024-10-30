@@ -343,7 +343,7 @@ class TxStream():
         assert(self._future is None)
         self._future = future = self._libfibre.loop.create_future()
         self._tx_buf = data # Retain a reference to the buffer to prevent it from being garbage collected
-
+        
         libfibre_start_tx(self._tx_stream_handle,
             cast(self._tx_buf, c_char_p), len(self._tx_buf),
             self._c_on_tx_completed, None)
@@ -391,6 +391,7 @@ class RxStream():
         future = self._future
         self._future = None
         self._rx_buf = None
+        
         
         if status == kFibreClosed:
             self.is_closed = True
@@ -528,6 +529,7 @@ class RemoteFunction(object):
         self._inputs = inputs
         self._outputs = outputs
         self._rx_size = sum(codec.get_length() for _, _, codec in self._outputs)
+        
 
     async def async_call(self, args, cancellation_token):
         #print("making call on " + hex(args[0]._obj_handle))
@@ -560,7 +562,9 @@ class RemoteFunction(object):
             arg_length = arg[2].get_length()
             outputs.append(arg[2].deserialize(self._libfibre, rx_buf[:arg_length]))
             rx_buf = rx_buf[arg_length:]
-
+        
+        
+        
         if len(outputs) == 0:
             return
         elif len(outputs) == 1:
@@ -577,13 +581,13 @@ class RemoteFunction(object):
         it blocks until the function completes and returns the result(s) of the 
         invokation.
         """
-
+        
         if threading.current_thread() != libfibre_thread:
             return run_coroutine_threadsafe(self._libfibre.loop, lambda: self.__call__(*args))
 
         if (len(self._inputs) != len(args)):
             raise TypeError("expected {} arguments but have {}".format(len(self._inputs), len(args)))
-
+        
         coro = self.async_call(args, cancellation_token)
         return asyncio.ensure_future(coro, loop=self._libfibre.loop)
 
@@ -619,7 +623,8 @@ class RemoteAttribute(object):
         else:
             # the object will be released when the parent is released
             instance._children.add(obj)
-
+            
+        
         return obj
 
     def __get__(self, instance, owner):
@@ -672,6 +677,7 @@ class RemoteObject(object):
         if self.__sealed__ and not key in dir(self) and not hasattr(self, key):
             raise AttributeError("Attribute {} not found".format(key))
         object.__setattr__(self, key, value)
+        
 
     #def __del__(self):
     #    print("unref")
@@ -822,6 +828,7 @@ class LibFibre():
             return py_intf
 
     def _load_py_obj(self, obj_handle, intf_handle):
+        
         if not obj_handle in self._objects:
             name = None # TODO: load from libfibre
             py_intf = self._load_py_intf(name, intf_handle)
@@ -856,7 +863,7 @@ class LibFibre():
                         load(attr._get_obj(subobj))
 
         load(py_obj)
-
+        
         discovery._unannounced.append(py_obj)
         old_future = discovery._future
         discovery._future = self.loop.create_future()

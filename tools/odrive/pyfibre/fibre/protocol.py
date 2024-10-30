@@ -160,6 +160,7 @@ class StreamBasedPacketSink(PacketSink):
         # append CRC in big endian
         crc16 = calc_crc16(CRC16_INIT, packet)
         self._output.process_bytes(struct.pack('>H', crc16))
+        
 
 class PacketFromStreamConverter(PacketSource):
     def __init__(self, input):
@@ -249,6 +250,7 @@ class Channel(PacketSink):
                     # Process response
                     # This should not throw an exception, otherwise the channel breaks
                     self.process_packet(response)
+                    
                 #print("receiver thread is exiting")
             except Exception:
                 self._logger.debug("receiver thread is exiting: " + traceback.format_exc())
@@ -284,7 +286,7 @@ class Channel(PacketSink):
             trailer = self._interface_definition_crc
         #print("append trailer " + trailer)
         packet = packet + struct.pack('<H', trailer)
-
+        
         if (expect_ack):
             ack_event = Event()
             self._expected_acks[seq_no] = ack_event
@@ -332,10 +334,11 @@ class Channel(PacketSink):
             if (len(chunk) == 0):
                 break
             buffer += chunk
+            
         return buffer
 
     def process_packet(self, packet):
-        #print("process packet")
+        
         packet = bytes(packet)
         if (len(packet) < 2):
             raise Exception("packet too short")
