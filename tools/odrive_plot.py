@@ -24,11 +24,10 @@ time.sleep(0.2)
 oscilloscope_data =[]
 
 
-sample_points = 4096
+sample_points = 16384
 for oscilloscope_item in range(0,sample_points):
     #print("oscilloscope_item " + str(oscilloscope_item) + " = " + str(my_drive.get_oscilloscope_val(oscilloscope_item)))
-    oscilloscope_data.append(my_drive.get_oscilloscope_val(oscilloscope_item))
-
+    oscilloscope_data.append(my_drive.oscilloscope.get_val(oscilloscope_item))
 
 
 with open('output_actual_velocity.csv', 'w', newline='', encoding='utf-8') as file:

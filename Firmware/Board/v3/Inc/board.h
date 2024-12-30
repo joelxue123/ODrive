@@ -74,7 +74,7 @@
 
 // The delta from the control loop timestamp to the current sense timestamp is
 // exactly 0 for M0 and TIM1_INIT_COUNT for M1.
-#define MAX_CONTROL_LOOP_UPDATE_TO_CURRENT_UPDATE_DELTA (TIM_1_8_PERIOD_CLOCKS / 2 + 1 * 128)
+
 
 #ifdef __cplusplus
 #include <Drivers/DRV8301/drv8301.hpp>

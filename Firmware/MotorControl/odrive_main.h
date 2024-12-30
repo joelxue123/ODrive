@@ -232,6 +232,9 @@ public:
 
     ODriveCAN can_;
 
+
+
+
     BoardConfig_t config_;
     uint32_t user_config_loaded_ = 0;
     bool misconfigured_ = false;

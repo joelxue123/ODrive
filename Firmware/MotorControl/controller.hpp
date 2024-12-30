@@ -70,6 +70,7 @@ public:
     constexpr void input_pos_updated() {
         input_pos_updated_ = true;
     }
+   
     bool control_mode_updated();
     void set_input_pos_and_steps(float pos);
 

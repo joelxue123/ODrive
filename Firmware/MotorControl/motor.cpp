@@ -695,6 +695,10 @@ void Motor::pwm_update_cb(uint32_t output_timestamp) {
         control_law_status = control_law_->get_output(
             output_timestamp, pwm_timings, &i_bus);
     }
+    else
+    {
+        return;
+    }
 
     // Apply control law to calculate PWM duty cycles
     if (is_armed_ && control_law_status == ERROR_NONE) {
@@ -729,5 +733,4 @@ void Motor::pwm_update_cb(uint32_t output_timestamp) {
         disarm_with_error(ERROR_I_BUS_OUT_OF_RANGE);
     }
 
-    update_brake_current();
 }
