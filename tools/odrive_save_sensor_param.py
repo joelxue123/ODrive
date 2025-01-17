@@ -88,7 +88,8 @@ print("my_drive.axis0.motor.config.current_lim = 65")
 
 my_drive.axis0.motor.config.torque_lim = 65
 print("my_drive.axis0.motor.config.torque_lim = 65")
-
+my_drive.axis0.motor.config.motor_torque_base = 70
+my_drive.axis0.config.current_base = 70
 my_drive.save_configuration()
 print("my_drive.save_configuration()")
 time.sleep(3)

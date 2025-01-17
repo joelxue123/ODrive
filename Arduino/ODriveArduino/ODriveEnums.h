@@ -53,8 +53,7 @@ enum AxisState {
     AXIS_STATE_LOCKIN_SPIN                   = 9,
     AXIS_STATE_ENCODER_DIR_FIND              = 10,
     AXIS_STATE_HOMING                        = 11,
-    AXIS_STATE_ENCODER_HALL_POLARITY_CALIBRATION = 12,
-    AXIS_STATE_ENCODER_HALL_PHASE_CALIBRATION = 13,
+    AXIS_STATE_MOTOR_FLUX                    = 12,
 };
 
 // ODrive.Encoder.Mode
