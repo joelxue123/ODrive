@@ -34,7 +34,7 @@ def calculate_thermistor_coeffs1(degree, Rload, R_25, Beta, Tmin, Tmax, thermist
 def test_calculate_thermistor_coeffs():
     # Test parameters
     degree = 3
-    Rload = 10000
+    Rload = 3300
     R_25 = 10000
     Beta = 3380
     Tmin = 0

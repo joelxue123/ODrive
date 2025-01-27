@@ -116,19 +116,18 @@ if __name__ == '__main__':
     my_drive.axis0.clear_errors()
     time.sleep(0.1)
     my_drive.axis0.config.general_lockin.current = 5
-    my_drive.axis0.config.general_lockin.vel = 20
+    my_drive.axis0.config.general_lockin.vel = 4
     my_drive.axis0.clear_errors()
 
     my_drive.axis0.requested_state = AXIS_STATE_LOCKIN_SPIN
-    time.sleep(2)
+    time.sleep(5)
     phase_data = []
     encodervalue_data = []
     phase_error_data = []
     samples = []
-    for i in range(1400):
+    for i in range(4000):
         phase_encodervalue_packed = my_drive.axis0.phase_encodervalue_packed
         phase = (phase_encodervalue_packed>>16)& 0x0000FFFF
-        phase = 65535 - phase
         encodervalue = phase_encodervalue_packed & 0x0000FFFF
         logging.info(f"phase: {phase}, encodervalue: {encodervalue}")
         phase_data.append(phase)
@@ -147,20 +146,19 @@ if __name__ == '__main__':
     phase_data = [x + offset for x in phase_data]
     phase_data = [x % 65536 for x in phase_data]
     phase_error_data = [x - encodervalue_data[i] for i, x in enumerate(phase_data)]
+    phase_error_data = [ x < -32768 and x + 65536 or x for x in phase_error_data]
+    phase_error_data = [ x > 32768 and x - 65536 or x for x in phase_error_data]
     
 
-    phase_error_data = get_period_data(cross_points[0], cross_points[1], phase_error_data)
-    phase_data = get_period_data(cross_points[0], cross_points[1], phase_data)
-    encodervalue_data = get_period_data(cross_points[0], cross_points[1], encodervalue_data)
-    #store_phase_error_period(phase_error_data)
-    phase_error_compensation =  load_phase_error_compensation('phase_error_compensation.csv')
-    calibrated_encodervalue_data = [x + phase_error_compensation[i] for i, x in enumerate(encodervalue_data)]
-    phase_error_data = [x - phase_data[i] for i, x in enumerate(calibrated_encodervalue_data)]
-    samples = [i for i in range(len(phase_data) -1)]
-    calibrated_encodervalue_data = calibrated_encodervalue_data[:-1]
-    phase_data = phase_data[:-1]
-    phase_error_data = phase_error_data[:-1]
-    encodervalue_data = encodervalue_data[:-1]
+    # phase_error_data = get_period_data(cross_points[0], cross_points[1], phase_error_data)
+    # phase_data = get_period_data(cross_points[0], cross_points[1], phase_data)
+    # encodervalue_data = get_period_data(cross_points[0], cross_points[1], encodervalue_data)
+    # samples = [i for i in range(len(phase_data) -1)]
+
+    # phase_data = phase_data[:-1]
+    # phase_error_data = phase_error_data[:-1]
+    # encodervalue_data = encodervalue_data[:-1]
+
 
     my_drive.axis0.requested_state = AXIS_STATE_IDLE
 
@@ -168,7 +166,6 @@ if __name__ == '__main__':
    # Plot data
     plt.figure(figsize=(12,6))
     plt.plot(samples, phase_data, 'b-', label='Phase')
-    plt.plot(samples, calibrated_encodervalue_data, 'r-', label='calibrated_encoder Value')
     plt.plot(samples, phase_error_data, 'g-', label='Phase Error')
     plt.plot (samples, encodervalue_data, 'y-', label='Origin Encoder Value')
     plt.xlabel('Sample Number')
